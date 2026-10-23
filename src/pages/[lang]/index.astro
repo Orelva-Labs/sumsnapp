@@ -1,0 +1,332 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import AppStoreBadge from '../../components/AppStoreBadge.astro';
+import HeroAnim from '../../components/anims/HeroAnim.astro';
+import StepsAnim from '../../components/anims/StepsAnim.astro';
+import ItemAnim from '../../components/anims/ItemAnim.astro';
+import AskAnim from '../../components/anims/AskAnim.astro';
+import LangAnim from '../../components/anims/LangAnim.astro';
+import { CAT } from '../../data/categories';
+import { FAQ } from '../../data/faq';
+import { site, locales, launched } from '../../config';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: string };
+const live = launched();
+const prelaunchForm = !live && site.notifyEndpoint !== '';
+const p = (slug: string) => `/${lang}/${slug}/`;
+
+const title = 'Sumsnapp: Receipt Scanner · Track spending item by item';
+const description = 'Snap a receipt and see where your money goes, item by item. Sumsnapp reads receipts on your iPhone. No account, no bank connection, Data Not Collected.';
+
+const org = { '@type': 'Organization', '@id': `${site.url}/#org`, name: 'Sumsnapp', url: site.url, logo: `${site.url}/favicon.svg`, email: site.supportEmail };
+const jsonLd = [
+  { '@context': 'https://schema.org', ...org },
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Sumsnapp', url: site.url, inLanguage: lang, publisher: { '@id': org['@id'] } },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'MobileApplication',
+    name: 'Sumsnapp',
+    alternateName: 'Sumsnapp: Receipt Scanner',
+    description,
+    operatingSystem: `iOS ${site.minIOS}`,
+    applicationCategory: 'FinanceApplication',
+    ...(live && { downloadUrl: site.appStoreUrl, installUrl: site.appStoreUrl }),
+    publisher: { '@id': org['@id'] },
+    offers: [
+      { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: site.price.currency },
+      { '@type': 'Offer', name: 'Sumsnapp Pro (monthly)', price: site.price.monthly.replace('$', ''), priceCurrency: site.price.currency },
+      { '@type': 'Offer', name: 'Sumsnapp Pro (yearly)', price: site.price.yearly.replace('$', ''), priceCurrency: site.price.currency },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQ.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+  },
+];
+---
+<Base lang={lang} title={title} description={description} jsonLd={jsonLd}>
+  <main id="top">
+    <!-- 1 Hero -->
+    <section class="wrap hero">
+      <div class="copy">
+        <h1>Snap a receipt. See where your money goes, item by item.</h1>
+        <p class="sub">Sumsnapp reads every line of your receipts on your iPhone and shows what you spend on each item, store and category. No account and no bank connection.</p>
+        {prelaunchForm ? (
+          <div class="notify">
+            <form method="post" action={site.notifyEndpoint}>
+              <label><span class="sr-only">Email address</span><input type="email" name="email" required placeholder="you@example.com" autocomplete="email" /></label>
+              <button type="submit">Get notified</button>
+            </form>
+            <span class="fine">One email when Sumsnapp is on the App Store. Double opt-in, unsubscribe anytime. <a href={p('privacy-policy')}>Privacy note</a></span>
+          </div>
+        ) : (
+          <div class="cta">
+            <AppStoreBadge campaign="hero" />
+            <span class="promise">Free · No account · Private</span>
+          </div>
+        )}
+        <span class="req">For iPhone · iOS {site.minIOS} or later</span>
+      </div>
+      <div class="visual"><HeroAnim /></div>
+    </section>
+
+    <!-- 2 Proof strip -->
+    <section class="proof" aria-label="Highlights">
+      <ul class="wrap">
+        <li><Icon name="phone_iphone" size={22} />Reads on your iPhone</li>
+        <li><Icon name="verified_user" size={22} />Data Not Collected</li>
+        <li><Icon name="translate" size={22} />Any language and currency</li>
+      </ul>
+    </section>
+
+    <!-- What is Sumsnapp (a self-contained definition for search and AI answers) -->
+    <section class="wrap what">
+      <h2 class="h2">What is Sumsnapp?</h2>
+      <div class="stack">
+        <p class="def">Sumsnapp is an iPhone app that scans paper receipts, photos, screenshots and PDF e-receipts and turns them into an item-level spending history. It reads every line on the device, sorts each item into one of 12 categories, and shows what you spend on each item, store and category. It needs no account or bank connection, and receipt photos and items never leave your iPhone.</p>
+        <ul class="cats" aria-label="The 12 categories">
+          {Object.values(CAT).map(([name, color, icon]) => (
+            <li><span class="cat-tile" style={`background:${color}`}><Icon name={icon} fill size={15} /></span>{name}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- 3 How it works -->
+    <section id="how" class="wrap section">
+      <h2 class="h2 mb">How it works</h2>
+      <p class="lead intro">One tap in. Everything after that is automatic.</p>
+      <StepsAnim />
+      {live && <div class="center"><AppStoreBadge campaign="how" /></div>}
+    </section>
+
+    <!-- 4 Item level -->
+    <section class="band">
+      <div class="wrap section split">
+        <div class="stack">
+          <h2 class="h2">What does milk really cost you?</h2>
+          <p class="lead">Your banking app sees “REWE €48.20”. Sumsnapp sees the milk, the coffee and the price of each. Open any item to see what you've spent on it, how often you buy it, and its average and last price.</p>
+          <p class="lead">With Pro, Sumsnapp keeps the price history across stores and tells you on the receipt itself when you paid more than usual.</p>
+        </div>
+        <div class="visual narrow"><ItemAnim /></div>
+      </div>
+    </section>
+
+    <!-- 5 Ask -->
+    <section class="wrap section split ask">
+      <div class="visual narrow"><AskAnim /></div>
+      <div class="stack">
+        <h2 class="h2">Ask in plain words</h2>
+        <p class="lead">“How much did I spend on coffee last month?” Sumsnapp answers from your own receipts, with the purchases behind the number.</p>
+        <p class="small">{site.free.questions} questions a month on Free. Unlimited with Pro.</p>
+      </div>
+    </section>
+
+    <!-- 6 Any language -->
+    <section class="band">
+      <div class="wrap section">
+        <div class="stack lang-copy">
+          <h2 class="h2">Any receipt, any language</h2>
+          <p class="lead">Supermarket, café, pharmacy or fuel, on paper or as a PDF. Search for “milk” and find Vollmilch and lait: items are translated on your iPhone. Foreign-currency receipts are converted at the day's rate.</p>
+        </div>
+        <LangAnim />
+      </div>
+    </section>
+
+    <!-- 7 Privacy -->
+    <section id="privacy" class="privacy">
+      <div class="wrap section split">
+        <div class="stack">
+          <h2 class="h2">Your receipts stay on your iPhone</h2>
+          <p class="lead">Sumsnapp reads receipts with Apple's on-device text recognition and Apple Intelligence, where available. Receipt photos and items are never uploaded.</p>
+          <ul class="checks">
+            <li><Icon name="check" size={22} />No account and no sign-up</li>
+            <li><Icon name="check" size={22} />No ads, no analytics, no tracking</li>
+            <li><Icon name="check" size={22} />App Store privacy label: Data Not Collected</li>
+            <li><Icon name="check" size={22} />This website sets no cookies</li>
+          </ul>
+          <a class="more" href={p('privacy')}>What happens to your receipts →</a>
+        </div>
+        <figure class="flow">
+          <div class="nodes" role="img" aria-label="A receipt is read and stored on your iPhone. Nothing is uploaded.">
+            <div class="node"><div class="rcpt"><Icon name="receipt_long" size={38} /></div><span>Receipt</span></div>
+            <Icon name="arrow_forward" size={28} class="arrow" />
+            <div class="node wide"><div class="phone"><Icon name="lock" fill size={30} /><span>Read and<br />stored here</span></div><span>Your iPhone</span></div>
+            <Icon name="block" size={28} class="no" />
+            <div class="node"><div class="cloud"><Icon name="cloud_off" size={38} /></div><span class="dim">Nothing uploaded</span></div>
+          </div>
+          <figcaption>The app only goes online for exchange rates (currency codes and dates), App Store purchases, and Apple's language downloads for translation.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 8 Pricing -->
+    <section id="pricing" class="wrap section">
+      <h2 class="h2 mb">Free to start</h2>
+      <p class="lead intro">Scan your first receipts free. Upgrade when you want the full picture.</p>
+      <div class="plans">
+        <div class="plan">
+          <div><h3>Free</h3><div class="price rounded">$0</div></div>
+          <ul>
+            <li><Icon name="check" size={20} />{site.free.scans} scans a month</li>
+            <li><Icon name="check" size={20} />{site.free.questions} questions a month</li>
+            <li><Icon name="check" size={20} />Insights for the last {site.free.months} months</li>
+          </ul>
+        </div>
+        <div class="plan pro">
+          <div>
+            <div class="pro-head"><h3>Sumsnapp Pro</h3><span class="pill">1-week free trial</span></div>
+            <div class="from"><span>from</span><span class="price rounded num">{site.price.yearlyPerMonth}</span><span>a month, billed yearly</span></div>
+            <div class="terms">{site.price.yearly} a year or {site.price.monthly} a month. Trial on the yearly plan. Family Sharing included.</div>
+          </div>
+          <ul>
+            <li><Icon name="check" size={20} />Unlimited scans and questions</li>
+            <li><Icon name="check" size={20} />Your full history</li>
+            <li><Icon name="check" size={20} />Price alerts and price history</li>
+            <li><Icon name="check" size={20} />CSV export</li>
+            <li><Icon name="check" size={20} />App lock with Face ID</li>
+          </ul>
+        </div>
+      </div>
+      <div class="after">
+        {live && <AppStoreBadge campaign="pricing" />}
+        <a class="more" href={p('pricing')}>Compare plans and billing →</a>
+      </div>
+      <p class="small fine2">Prices vary by country. Cancel anytime in your Apple Account settings.</p>
+    </section>
+
+    <!-- 9 FAQ -->
+    <section id="faq" class="band">
+      <div class="faq section">
+        <h2 class="h2 mb2">Questions</h2>
+        <div class="qs">
+          {FAQ.map(([q, a], i) => (
+            <details open={i === 0}>
+              <summary><h3>{q}</h3><Icon name="add" size={24} /></summary>
+              <p>{a}</p>
+            </details>
+          ))}
+        </div>
+        <a class="more" href={p('support')}>All questions and support →</a>
+      </div>
+    </section>
+
+    <!-- 10 Final call to action -->
+    <section class="final">
+      <div class="wrap">
+        <div class="stack">
+          <h2>Start with your next receipt.</h2>
+          <p>Free for {site.free.scans} scans a month. No account to create.</p>
+          {live ? <AppStoreBadge campaign="final" /> : prelaunchForm ? <a class="soon" href="#top">Get notified at launch</a> : <AppStoreBadge campaign="final" />}
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<script>
+  import '../../scripts/anims';
+</script>
+
+<style>
+  .hero {
+    padding-top: clamp(32px, 6vw, 88px); padding-bottom: clamp(40px, 6vw, 72px);
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: clamp(32px, 5vw, 64px); align-items: center;
+  }
+  .copy { display: flex; flex-direction: column; gap: 22px; }
+  h1 { margin: 0; font-size: clamp(40px, 6.2vw, 72px); font-weight: 700; letter-spacing: -.025em; line-height: 1.02; text-wrap: balance; }
+  .sub { margin: 0; font-size: clamp(18px, 1.6vw, 21px); line-height: 1.45; color: var(--text2); max-width: 520px; text-wrap: pretty; }
+  .cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; }
+  .promise { font-size: 15px; font-weight: 600; color: var(--accent); }
+  .req { font-size: 14px; color: var(--text3); }
+  .notify { display: flex; flex-direction: column; gap: 10px; max-width: 480px; }
+  .notify form { display: flex; gap: 8px; flex-wrap: wrap; }
+  .notify label { flex: 1; min-width: 220px; }
+  .notify input { width: 100%; height: 54px; border-radius: 12px; border: 1px solid light-dark(rgba(60, 60, 67, .25), rgba(84, 84, 88, .8)); background: var(--card); padding: 0 16px; font-size: 17px; }
+  .notify button { height: 54px; padding: 0 22px; border: 0; border-radius: 12px; background: var(--accent); color: var(--on-accent); font-size: 17px; font-weight: 600; cursor: pointer; }
+  .fine { font-size: 13px; color: var(--text3); line-height: 1.4; }
+  .visual { width: 100%; max-width: 540px; justify-self: center; }
+  .visual.narrow { max-width: 480px; }
+
+  .proof { border-block: .5px solid var(--sep); background: var(--band); }
+  .proof ul { margin: 0 auto; padding-block: 22px; list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 44px; font-size: 16px; font-weight: 500; }
+  .proof li { display: flex; align-items: center; gap: 8px; }
+  .proof .icon, .checks .icon, .plan .icon { color: var(--accent); }
+
+  .what {
+    padding-top: var(--section);
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: clamp(28px, 5vw, 64px); align-items: start;
+  }
+  .def { margin: 0; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.55; text-wrap: pretty; }
+  .cats { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+  .cats li { height: 34px; padding: 0 12px 0 6px; border-radius: 17px; background: var(--card); display: flex; align-items: center; gap: 7px; font-size: 14px; }
+  .cats .cat-tile { width: 24px; height: 24px; border-radius: 7px; }
+
+  .mb { margin-bottom: 12px; }
+  .mb2 { margin-bottom: 28px; }
+  .intro { margin-bottom: 36px; max-width: 620px; }
+  .center { margin-top: 36px; display: flex; justify-content: center; }
+  @media (max-width: 899px) { .ask .visual { order: 1; } }
+  .lang-copy { max-width: 700px; margin-bottom: 36px; gap: 14px; }
+
+  .privacy { background: light-dark(#E3F1EA, #0C1D14); }
+  .privacy .h2 { color: light-dark(#14301F, #fff); }
+  .privacy .lead { color: light-dark(#24402F, #C9E4D5); }
+  .checks { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 17px; color: light-dark(#14301F, #fff); }
+  .checks li { display: flex; gap: 10px; align-items: center; }
+  .flow { margin: 0; border-radius: 28px; background: light-dark(#fff, #13261B); padding: clamp(20px, 3vw, 32px); display: flex; flex-direction: column; gap: 18px; }
+  .nodes { display: flex; align-items: center; justify-content: center; gap: clamp(6px, 1.4vw, 14px); flex-wrap: wrap; }
+  .node { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 88px; font-size: 14px; font-weight: 600; text-align: center; }
+  .node.wide { width: 132px; }
+  .rcpt { width: 72px; height: 88px; border-radius: 8px; background: var(--paper); color: var(--ink); box-shadow: 0 6px 16px rgba(0, 0, 0, .12); display: grid; place-items: center; }
+  .phone {
+    width: 84px; height: 148px; border-radius: 20px; border: 3px solid light-dark(#1C1C1E, #D1D1D6); background: var(--accent-soft);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  }
+  .phone .icon { color: var(--accent); }
+  .phone span { font-size: 11px; font-weight: 600; text-align: center; line-height: 1.2; }
+  .cloud { width: 80px; height: 80px; border-radius: 40px; border: 2px dashed light-dark(#AEAEB2, #5A5A5E); display: grid; place-items: center; color: #8E8E93; }
+  .flow :global(.arrow) { color: var(--accent); }
+  .flow :global(.no) { color: light-dark(#AEAEB2, #5A5A5E); }
+  .dim { color: var(--text3); }
+  figcaption { font-size: 13px; line-height: 1.5; color: light-dark(#3C3C43, #AEAEB2); border-top: .5px solid var(--sep2); padding-top: 14px; }
+
+  .plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 20px; max-width: 900px; }
+  .plan { border-radius: 24px; background: var(--card); padding: 28px; display: flex; flex-direction: column; gap: 18px; }
+  .plan.pro { box-shadow: 0 0 0 2px var(--accent); }
+  .plan h3 { margin: 0; font-size: 22px; font-weight: 600; }
+  .price { font-size: 40px; font-weight: 600; margin-top: 6px; }
+  .plan ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: 16px; }
+  .plan li { display: flex; gap: 10px; }
+  .pro-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .from { display: flex; align-items: baseline; gap: 8px; margin-top: 6px; flex-wrap: wrap; font-size: 15px; color: var(--text3); }
+  .from .price { margin: 0; color: var(--fg); }
+  .terms { font-size: 14px; color: var(--text3); margin-top: 4px; }
+  .after { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; margin-top: 28px; }
+  .fine2 { margin-top: 16px; font-size: 13px; }
+
+  .faq { max-width: 880px; margin: 0 auto; padding-inline: var(--gutter); }
+  .qs { border-top: .5px solid var(--sep2); }
+  details { border-bottom: .5px solid var(--sep2); }
+  summary { min-height: 64px; padding: 16px 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; cursor: pointer; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary h3 { margin: 0; font-size: clamp(17px, 1.6vw, 19px); font-weight: 600; }
+  summary .icon { color: var(--accent); transition: transform .25s; }
+  details[open] summary .icon { transform: rotate(45deg); }
+  details p { margin: 0; padding: 0 40px 22px 0; font-size: 17px; line-height: 1.55; color: var(--text2); text-wrap: pretty; }
+  .faq .more { margin-top: 20px; }
+
+  .final { background: light-dark(#1E6A4C, #11281C); color: #fff; }
+  .final .wrap { padding-block: clamp(64px, 9vw, 104px); }
+  .final .stack { max-width: 600px; align-items: flex-start; }
+  .final h2 { margin: 0; font-size: clamp(32px, 4.6vw, 54px); font-weight: 700; letter-spacing: -.02em; line-height: 1.05; text-wrap: balance; }
+  .final p { margin: 0; font-size: 18px; line-height: 1.5; color: #D6EBDF; }
+  .final :global(.badge) { border-color: #A6A6A6; }
+  .soon { height: 54px; padding: 0 22px; border-radius: 12px; background: #fff; color: #14301F; font-size: 17px; font-weight: 600; display: flex; align-items: center; text-decoration: none; }
+</style>

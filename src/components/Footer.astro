@@ -1,0 +1,54 @@
+---
+import Logo from './Logo.astro';
+import AppStoreBadge from './AppStoreBadge.astro';
+import { site, locales, languageNames } from '../config';
+
+interface Props { lang: string }
+const { lang } = Astro.props;
+const p = (slug: string) => `/${lang}/${slug}/`;
+const cols: [string, [string, string][]][] = [
+  ['Product', [['#how', 'How it works'], ['#privacy', 'Privacy'], ['#pricing', 'Pricing'], [p('guides'), 'Guides']]],
+  ['Help', [['#faq', 'FAQ and support'], [p('press'), 'Press kit'], [p('accessibility'), 'Accessibility']]],
+  ['Legal', [[p('privacy-policy'), 'Privacy Policy'], [p('terms'), 'Terms of Use'], [p('impressum'), 'Impressum']]],
+];
+const year = new Date().getFullYear();
+---
+<footer class="wrap footer">
+  <div class="grid">
+    <div class="brand">
+      <Logo size={28} text={20} />
+      <AppStoreBadge small campaign="footer" />
+    </div>
+    {cols.map(([title, links]) => (
+      <nav class="col" aria-label={title}>
+        <span class="title">{title}</span>
+        {links.map(([href, label]) => <a href={href}>{label}</a>)}
+      </nav>
+    ))}
+  </div>
+  <div class="base">
+    <span>© {year} Sumsnapp{site.city && ` · Made in ${site.city}`} · No cookies on this site</span>
+    {locales.length > 1 && (
+      <div class="langs">
+        {locales.map((l) => <a href={`/${l}/`} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}>{languageNames[l]}</a>)}
+      </div>
+    )}
+  </div>
+</footer>
+
+<style>
+  .footer { padding-top: 56px; padding-bottom: 40px; display: flex; flex-direction: column; gap: 36px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 28px; }
+  .brand { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+  .col { display: flex; flex-direction: column; gap: 2px; font-size: 15px; }
+  .title { font-size: 13px; font-weight: 600; color: var(--text3); margin-bottom: 6px; }
+  .col a { color: inherit; text-decoration: none; min-height: 36px; display: flex; align-items: center; }
+  .col a:hover { color: var(--accent); }
+  .base {
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--text3);
+    border-top: .5px solid var(--sep2); padding-top: 20px;
+  }
+  .langs { display: flex; gap: 4px; flex-wrap: wrap; }
+  .langs a { min-height: 32px; padding: 0 8px; border-radius: 8px; display: flex; align-items: center; color: inherit; text-decoration: none; }
+  .langs a[aria-current] { background: var(--fill); }
+</style>

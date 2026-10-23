@@ -1,0 +1,20 @@
+---
+import Icon from './Icon.astro';
+import { site, launched } from '../config';
+
+interface Props { small?: boolean; class?: string; campaign?: string }
+const { small = false, class: className, campaign = 'site' } = Astro.props;
+// Campaign token so App Store Connect can tell which button brought the install (no cookies needed).
+const href = launched() ? `${site.appStoreUrl}${site.appStoreUrl.includes('?') ? '&' : '?'}ct=${campaign}` : undefined;
+---
+{href ? (
+  <a class:list={['badge', { sm: small }, className]} href={href} aria-label="Download Sumsnapp on the App Store">
+    <Icon name="phone_iphone" size={small ? 24 : 30} />
+    <span><small>Download on the</small><b>App Store</b></span>
+  </a>
+) : (
+  <span class:list={['badge', 'is-soon', { sm: small }, className]} aria-label="Sumsnapp is coming soon to the App Store">
+    <Icon name="phone_iphone" size={small ? 24 : 30} />
+    <span><small>Coming soon to the</small><b>App Store</b></span>
+  </span>
+)}

@@ -1,0 +1,91 @@
+/* Sumsnapp design tokens: the iOS app's colours, light first and dark second. */
+:root {
+  color-scheme: light dark;
+  --bg: light-dark(#F2F2F7, #000);
+  --fg: light-dark(#000, #fff);
+  --card: light-dark(#fff, #1C1C1E);
+  --card2: light-dark(#fff, #2C2C2E);
+  --inset: light-dark(#F2F2F7, #1C1C1E);
+  --band: light-dark(#fff, #0E0E10);
+  --accent: light-dark(#1E6A4C, #5CC08F);
+  --accent-hover: light-dark(#14503A, #7FD3A8);
+  --accent-soft: light-dark(#E3F1EA, #11281C);
+  --on-accent: light-dark(#fff, #04140C);
+  --text2: light-dark(#3C3C43, #C7C7CC);
+  --text3: light-dark(#6C6C70, #AEAEB2);
+  --sep: light-dark(rgba(60, 60, 67, .14), rgba(84, 84, 88, .5));
+  --sep2: light-dark(rgba(60, 60, 67, .18), rgba(84, 84, 88, .6));
+  --fill: light-dark(rgba(118, 118, 128, .14), rgba(118, 118, 128, .28));
+  --shadow: light-dark(rgba(0, 0, 0, .12), rgba(0, 0, 0, .6));
+  --paper: #F7F5EF;
+  --ink: #2B2A28;
+  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', Inter, system-ui, sans-serif;
+  --rounded: ui-rounded, 'SF Pro Rounded', -apple-system, system-ui, sans-serif;
+  --mono: ui-monospace, Menlo, monospace;
+  --gutter: clamp(20px, 5vw, 48px);
+  --section: clamp(64px, 9vw, 112px);
+}
+:root[data-theme='light'] { color-scheme: light; }
+:root[data-theme='dark'] { color-scheme: dark; }
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; min-height: 100vh; overflow-x: hidden;
+  background: var(--bg); color: var(--fg); font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); }
+a:hover { color: var(--accent-hover); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+button, input { font: inherit; color: inherit; }
+img, svg { display: block; }
+.icon { flex: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.num { font-variant-numeric: tabular-nums; }
+.rounded { font-family: var(--rounded); }
+
+/* Layout */
+.wrap { max-width: 1200px; margin: 0 auto; padding-inline: var(--gutter); }
+.section { padding-block: var(--section); }
+.band { background: var(--band); }
+.split {
+  display: grid; align-items: center; gap: clamp(32px, 5vw, 72px);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+}
+.stack { display: flex; flex-direction: column; gap: 18px; }
+.h2 { margin: 0; font-size: clamp(30px, 4.2vw, 48px); font-weight: 700; letter-spacing: -.02em; line-height: 1.08; text-wrap: balance; }
+.lead { margin: 0; font-size: 18px; line-height: 1.55; color: var(--text2); text-wrap: pretty; }
+.small { margin: 0; font-size: 15px; line-height: 1.5; color: var(--text3); }
+.more { font-size: 17px; font-weight: 600; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
+
+/* App Store badge (replace with Apple's official badge artwork before launch) */
+.badge {
+  display: inline-flex; align-items: center; gap: 8px; height: 54px; padding: 0 20px 0 14px;
+  border-radius: 12px; background: #000; color: #fff; text-decoration: none;
+  border: 1px solid light-dark(#000, #A6A6A6);
+}
+.badge:hover { color: #fff; }
+.badge span { display: flex; flex-direction: column; line-height: 1.05; white-space: nowrap; }
+.badge small { font-size: 11px; }
+.badge b { font-size: 22px; font-weight: 600; letter-spacing: -.01em; }
+.badge.is-soon { cursor: default; }
+.badge.sm { height: 44px; padding: 0 14px 0 10px; border-radius: 10px; }
+.badge.sm small { font-size: 9px; }
+.badge.sm b { font-size: 17px; }
+
+.pill {
+  height: 28px; padding: 0 10px; border-radius: 14px; display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12.5px; font-weight: 600; white-space: nowrap; background: var(--accent-soft); color: var(--accent);
+}
+
+/* Animations: hidden until the player has drawn the first frame, so the final frame doesn't flash. */
+html.motion [data-anim]:not([data-ready]) { visibility: hidden; }
+.mono-tile {
+  display: grid; place-items: center; color: #fff; flex: none;
+  font-family: var(--rounded); font-weight: 700;
+}
+.cat-tile { display: grid; place-items: center; color: #fff; flex: none; }
+.paper { background: var(--paper); color: var(--ink); font-family: var(--mono); }
+.ease-pop { transition: opacity .35s ease, transform .55s cubic-bezier(.2, .9, .3, 1.2); }

@@ -1,0 +1,40 @@
+---
+// A question is typed into Search and answered from the receipts behind it.
+import Icon from '../Icon.astro';
+import { Q, ASK, ASK_TOTAL, eur } from '../../data/anims';
+---
+<div class="ask-anim" data-anim="ask">
+  <div class="field">
+    <Icon name="search" size={22} />
+    <span data-typed>{Q}</span><span class="cursor" data-cursor style="opacity:0"></span>
+  </div>
+  <div class="answer" data-answer>
+    <div class="amount rounded num" data-amount>{eur(ASK_TOTAL)}</div>
+    <div class="what">on coffee in September, across 6 purchases</div>
+    <div class="list">
+      {ASK.map(([name, n, amt, c]) => (
+        <div class="r" data-askrow><i style={`background:${c}`}></i><span class="name">{name}</span><span class="n">{n}</span><span class="a num">{amt}</span></div>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .ask-anim { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+  .field {
+    height: 52px; border-radius: 14px; background: var(--card); display: flex; align-items: center; gap: 8px; padding: 0 14px;
+    font-size: 17px; box-shadow: 0 6px 20px light-dark(rgba(0, 0, 0, .05), rgba(0, 0, 0, .4));
+  }
+  .field .icon { color: var(--text3); }
+  .cursor { width: 2px; height: 22px; background: var(--accent); margin-left: -6px; }
+  .answer { border-radius: 20px; background: var(--accent-soft); padding: 18px; transition: opacity .35s, transform .45s cubic-bezier(.2, .9, .3, 1.2); }
+  .amount { font-size: 44px; font-weight: 600; line-height: 1.05; }
+  .what { font-size: 15px; margin-top: 4px; }
+  .list { margin-top: 14px; border-radius: 14px; background: light-dark(#fff, #0B1A12); overflow: hidden; }
+  .r { display: flex; align-items: center; gap: 10px; padding: 0 14px; min-height: 44px; font-size: 15px; transition: opacity .3s; border-top: .5px solid light-dark(rgba(60, 60, 67, .1), rgba(84, 84, 88, .4)); }
+  .r:first-child { border-top: 0; }
+  i { width: 9px; height: 9px; border-radius: 5px; }
+  .name { flex: 1; }
+  .n { color: var(--text3); font-size: 13px; }
+  .a { min-width: 58px; text-align: right; }
+</style>

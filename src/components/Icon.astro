@@ -1,0 +1,36 @@
+---
+// Material Symbols Rounded, inlined as SVG at build time (no icon font, no Google Fonts request).
+import { getIconData, iconToSVG, replaceIDs } from '@iconify/utils';
+import icons from '@iconify-json/material-symbols/icons.json';
+
+interface Props {
+  name: string;
+  /** Filled glyph (the design's FILL 1); outline otherwise when the icon has one. */
+  fill?: boolean;
+  size?: number;
+  class?: string;
+  label?: string;
+}
+
+const { name, fill = false, size = 24, class: className, label } = Astro.props;
+const base = name.replace(/_/g, '-');
+const renamed: Record<string, string> = { 'phone-iphone': 'mobile' };
+const id = renamed[base] ?? base;
+const candidates = fill ? [`${id}-rounded`] : [`${id}-outline-rounded`, `${id}-rounded`];
+const data = candidates.map((n) => getIconData(icons as any, n)).find(Boolean);
+if (!data) throw new Error(`Unknown icon: ${name}`);
+const svg = iconToSVG(data, { height: size, width: size });
+const body = replaceIDs(svg.body);
+---
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width={size}
+  height={size}
+  viewBox={svg.attributes.viewBox}
+  class:list={['icon', className]}
+  fill="currentColor"
+  aria-hidden={label ? undefined : 'true'}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  set:html={body}
+/>
