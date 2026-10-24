@@ -1,12 +1,12 @@
 ---
-// "/" sends visitors to the English page. A host-level 301 should replace this once deployed.
+// Fallback only: on Vercel, vercel.json redirects "/" to /en/ permanently before this page is served.
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>Sumsnapp</title>
-    <link rel="canonical" href="https://sumsnapp.com/en/" />
+    <link rel="canonical" href="https://www.sumsnapp.com/en/" />
     <meta http-equiv="refresh" content="0; url=/en/" />
     <meta name="robots" content="noindex" />
   </head>

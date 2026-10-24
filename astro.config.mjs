@@ -8,7 +8,7 @@ const locales = ['en'];
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://sumsnapp.com',
+  site: 'https://www.sumsnapp.com',
   trailingSlash: 'always',
   // Scoped styles reach elements inside child components (e.g. Icon), via a class rather than an attribute.
   scopedStyleStrategy: 'class',
@@ -21,7 +21,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       // "/" only redirects to /en/, so it stays out of the sitemap.
-      filter: (page) => page !== 'https://sumsnapp.com/',
+      filter: (page) => page !== 'https://www.sumsnapp.com/',
       i18n: { defaultLocale: 'en', locales: Object.fromEntries(locales.map((l) => [l, l])) },
     }),
   ],

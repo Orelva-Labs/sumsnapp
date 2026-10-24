@@ -1,7 +1,7 @@
 // Facts that appear on the site, kept in one place so the page, JSON-LD and llms.txt never disagree.
 export const site = {
   name: 'Sumsnapp',
-  url: 'https://sumsnapp.com',
+  url: 'https://www.sumsnapp.com',
   /** Empty until the app is on the App Store; the site then shows a "coming soon" state. */
   appStoreUrl: '',
   /** Double opt-in signup endpoint for "Get notified" (prelaunch). Empty hides the form. */
