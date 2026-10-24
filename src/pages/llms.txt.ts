@@ -29,6 +29,10 @@ ${FAQ.map(([q, a]) => `### ${q}\n${a}`).join('\n\n')}
 
 ## Links
 - Home: ${site.url}/en/
+- Help and support: ${site.url}/en/support/
+- Guides: ${site.url}/en/guides/
+- Privacy Policy: ${site.url}/en/privacy-policy/
+- Press kit: ${site.url}/en/press/
 - Contact: ${site.supportEmail}
 `;
   return new Response(text, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });

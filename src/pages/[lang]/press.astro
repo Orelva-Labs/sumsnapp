@@ -1,0 +1,115 @@
+---
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { site, legal, locales, launched } from '../../config';
+import { CAT } from '../../data/categories';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+const { lang } = Astro.params as { lang: string };
+
+const shots: [string, string][] = [
+  ['1-welcome', 'Welcome screen: a receipt read into categorised items'],
+  ['2-receipt', 'A scanned receipt with price alerts on items that cost more than usual'],
+  ['3-insights', 'Insights: monthly spending, daily bars and a money-saving tip'],
+  ['4-item', 'Price history of whole milk across Lidl and Rewe'],
+  ['5-ask', 'An answer to “How much on flat white in the last 3 months?”'],
+];
+const facts: [string, string][] = [
+  ['Name', 'Sumsnapp (Sumsnapp: Receipt Scanner)'],
+  ['Platform', `iPhone, iOS ${site.minIOS} or later`],
+  ['Availability', launched() ? 'App Store, worldwide' : 'Coming soon to the App Store'],
+  ['Price', `Free (${site.free.scans} scans a month). Sumsnapp Pro ${site.price.monthly} a month or ${site.price.yearly} a year`],
+  ['Privacy', 'Receipts are read on the device and never uploaded. No account. App Store label: Data Not Collected'],
+  ['Categories', `${Object.keys(CAT).length}, from Groceries to Transport & Fuel`],
+  ['Publisher', `${legal.business}, ${legal.city}, Germany`],
+  ['Website', 'www.sumsnapp.com'],
+];
+---
+<Base lang={lang} path="press/" title="Press kit · Sumsnapp"
+  description="Sumsnapp press kit: app description, key facts, screenshots, app icon and logo, and press contact.">
+  <main id="top" class="wrap press">
+    <header class="head">
+      <h1>Press kit</h1>
+      <p class="lead">Everything you need to write about Sumsnapp. Use the images freely in coverage of the app. For anything else, <a href={`mailto:${legal.email}?subject=Press`}>get in touch</a>.</p>
+      <a class="dl" href="/press/sumsnapp-press-kit.zip" download><Icon name="download" size={22} />Download everything (ZIP, 3 MB)</a>
+    </header>
+
+    <section class="block">
+      <h2>About Sumsnapp</h2>
+      <h3>In one line</h3>
+      <p class="quote">Sumsnapp is an iPhone app that scans receipts and shows what you spend on every item, entirely on your iPhone.</p>
+      <h3>In one paragraph</h3>
+      <p class="quote">Sumsnapp turns paper receipts, photos, screenshots and PDF e-receipts into an item-level spending history. Point the camera at a receipt and it reads every line on the device: store, date, items, quantities, discounts, tax and total, and checks that they add up. Each item is sorted into a category, so you can see what you spend on groceries, coffee or a single product like milk, by week, month or year, and ask questions such as “How much did I spend on coffee last month?”. Sumsnapp Pro adds price alerts that show when you paid more than usual and where it was cheaper. There is no account and no bank connection, and receipts never leave the iPhone.</p>
+    </section>
+
+    <section class="block">
+      <h2>Key facts</h2>
+      <dl class="facts">
+        {facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+      </dl>
+    </section>
+
+    <section class="block">
+      <h2>Screenshots</h2>
+      <p class="small">iPhone 16 Pro, sample receipts. Click a screenshot for the full-resolution PNG.</p>
+      <ul class="shots">
+        {shots.map(([id, alt]) => (
+          <li>
+            <a href={`/press/screens/sumsnapp-${id}.png`} download>
+              <img src={`/press/screens/sumsnapp-${id}.jpg`} alt={alt} width="414" height="900" loading="lazy" decoding="async" />
+            </a>
+            <span>{alt}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="block">
+      <h2>App icon and logo</h2>
+      <ul class="assets">
+        <li><img src="/press/sumsnapp-app-icon.png" alt="Sumsnapp app icon" width="120" height="120" loading="lazy" /><a href="/press/sumsnapp-app-icon.png" download>App icon, light (PNG, 1024 px)</a></li>
+        <li><img src="/press/sumsnapp-app-icon-dark.png" alt="Sumsnapp app icon, dark" width="120" height="120" loading="lazy" /><a href="/press/sumsnapp-app-icon-dark.png" download>App icon, dark (PNG, 1024 px)</a></li>
+        <li><img src="/press/sumsnapp-mark.svg" alt="Sumsnapp mark" width="120" height="120" loading="lazy" /><a href="/press/sumsnapp-mark.svg" download>Mark (SVG)</a></li>
+      </ul>
+      <p class="small">Please don't recolour, stretch or redraw the icon. The name is written Sumsnapp, with two p's.</p>
+    </section>
+
+    <section class="block">
+      <h2>Founder</h2>
+      {/* TODO: a few lines in the founder's own words on why Sumsnapp exists. */}
+      <p>Sumsnapp is made by {legal.owner} at {legal.business}, an independent studio in {legal.city}, Germany.</p>
+    </section>
+
+    <section class="block contact">
+      <h2>Press contact</h2>
+      <p>{legal.owner} · <a href={`mailto:${legal.email}?subject=Press`}>{legal.email}</a></p>
+      <p class="small">Review access to Sumsnapp Pro is available on request.</p>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .press { max-width: 1000px; padding-top: clamp(32px, 5vw, 64px); padding-bottom: var(--section); }
+  .head h1 { margin: 0 0 12px; font-size: clamp(34px, 5vw, 56px); font-weight: 700; letter-spacing: -.02em; line-height: 1.05; }
+  .dl { margin-top: 22px; height: 50px; padding: 0 18px; border-radius: 12px; background: var(--accent); color: var(--on-accent); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+  .dl:hover { color: var(--on-accent); opacity: .92; }
+  .block { margin-top: 56px; }
+  .block h2 { margin: 0 0 14px; font-size: 26px; letter-spacing: -.01em; }
+  .block h3 { margin: 20px 0 6px; font-size: 15px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: .02em; }
+  .block p { margin: 0 0 12px; font-size: 17px; line-height: 1.6; color: var(--text2); max-width: 760px; }
+  .quote { padding: 16px 18px; border-radius: 16px; background: var(--card); color: var(--fg) !important; }
+  .facts { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 10px; }
+  .facts div { padding: 14px 16px; border-radius: 14px; background: var(--card); }
+  dt { font-size: 13px; color: var(--text3); font-weight: 600; }
+  dd { margin: 4px 0 0; font-size: 16px; line-height: 1.45; }
+  .shots { margin: 18px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
+  .shots img { width: 100%; height: auto; border-radius: 22px; box-shadow: 0 10px 30px var(--shadow); }
+  .shots span { display: block; margin-top: 10px; font-size: 13px; line-height: 1.4; color: var(--text3); }
+  .assets { margin: 0 0 14px; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 28px; }
+  .assets li { display: flex; flex-direction: column; gap: 10px; font-size: 15px; }
+  .assets img { width: 120px; height: 120px; border-radius: 27px; }
+  .contact { padding: 24px; border-radius: 24px; background: var(--accent-soft); }
+  .small { font-size: 14px !important; color: var(--text3) !important; }
+</style>

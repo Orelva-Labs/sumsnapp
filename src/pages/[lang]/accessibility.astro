@@ -1,0 +1,54 @@
+---
+import Legal from '../../layouts/Legal.astro';
+import { legal, locales } from '../../config';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+const { lang } = Astro.params as { lang: string };
+
+const toc: [string, string][] = [
+  ['commitment', 'Our aim'],
+  ['website', 'This website'],
+  ['app', 'The app'],
+  ['limits', 'Known limitations'],
+  ['feedback', 'Feedback'],
+];
+---
+<Legal lang={lang} path="accessibility/" title="Accessibility" toc={toc}
+  description="How accessible the Sumsnapp website and iPhone app are, what doesn't work well yet, and how to report a problem.">
+
+  <h2 id="commitment">Our aim</h2>
+  <p>Everyone should be able to see where their money goes. We want the Sumsnapp website and app to work well with assistive technology and with the accessibility settings on your devices. This statement describes where we are today, including what doesn't work well yet.</p>
+
+  <h2 id="website">This website</h2>
+  <p>The website is designed to meet the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA. It has not been audited by an external organisation yet.</p>
+  <ul>
+    <li>Pages use headings, landmarks and lists so screen readers can navigate them, and there is a "Skip to content" link.</li>
+    <li>Everything can be used with a keyboard, with a visible focus outline.</li>
+    <li>Text and controls are designed for sufficient contrast in light and dark mode, and the site follows your device's appearance setting.</li>
+    <li>Text can be enlarged to 200% without content being cut off, and the layout works on small screens without scrolling sideways.</li>
+    <li>Animations only play while visible, pause when you point at or focus them, and are replaced by a still picture if you have turned on "Reduce motion".</li>
+    <li>Answers to questions use standard disclosure elements that work without JavaScript.</li>
+  </ul>
+
+  <h2 id="app">The app</h2>
+  <ul>
+    <li>Buttons that show only an icon, such as the shutter, upload and close buttons, have VoiceOver labels.</li>
+    <li>Categories are shown with an icon and a name as well as a colour, so colour is never the only way to tell them apart.</li>
+    <li>Sumsnapp supports light and dark mode.</li>
+    <li>App lock works with Face ID, Touch ID or your device passcode.</li>
+  </ul>
+
+  <h2 id="limits">Known limitations</h2>
+  <p>We'd rather tell you what doesn't work well than have you find out:</p>
+  <ul>
+    <li><strong>Text size in the app.</strong> The app does not yet follow the iPhone's Text Size or Larger Text settings; text stays at its standard size. This is the next accessibility improvement we're working on.</li>
+    <li><strong>Reduce motion in the app.</strong> Only the welcome screen currently respects "Reduce motion". Some animations, such as the receipt scan, still play.</li>
+    <li><strong>VoiceOver in the app.</strong> Charts and some custom controls are not yet fully described for VoiceOver.</li>
+    <li><strong>App language.</strong> The app is in English only for now.</li>
+  </ul>
+
+  <h2 id="feedback">Feedback</h2>
+  <p>If something on the website or in the app is hard or impossible for you to use, please tell us at <a href={`mailto:${legal.email}?subject=Accessibility`}>{legal.email}</a>. Describe what you were trying to do and the device and assistive technology you use. We aim to reply within two working days and to fix problems as quickly as we can.</p>
+</Legal>

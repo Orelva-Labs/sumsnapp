@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import { locales } from '../../../config';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+const { lang } = Astro.params as { lang: string };
+const guides = (await getCollection('guides', (g) => g.id.startsWith(`${lang}/`)))
+  .sort((a, b) => +b.data.published - +a.data.published);
+const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Base lang={lang} path="guides/" title="Guides: tracking spending from receipts · Sumsnapp"
+  description="Practical guides to tracking grocery and everyday spending from your receipts, comparing receipt apps, and keeping your financial data private.">
+  <main id="top" class="wrap guides">
+    <header>
+      <h1>Guides</h1>
+      <p class="lead">Practical help with tracking what you spend, from your receipts.</p>
+    </header>
+    <ul class="list">
+      {guides.map((g) => (
+        <li>
+          <a href={`/${lang}/guides/${g.id.split('/')[1]}/`}>
+            <span class="kicker">{g.data.kicker}</span>
+            <h2>{g.data.title}</h2>
+            <p>{g.data.description}</p>
+            <time datetime={g.data.published.toISOString().slice(0, 10)}>{fmt(g.data.published)}</time>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </main>
+</Base>
+
+<style>
+  .guides { max-width: 1000px; padding-top: clamp(32px, 5vw, 64px); padding-bottom: var(--section); }
+  h1 { margin: 0 0 12px; font-size: clamp(34px, 5vw, 56px); font-weight: 700; letter-spacing: -.02em; line-height: 1.05; }
+  .list { margin: 40px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 18px; }
+  .list a { height: 100%; display: flex; flex-direction: column; gap: 8px; padding: 24px; border-radius: 24px; background: var(--card); color: inherit; text-decoration: none; transition: box-shadow .2s; }
+  .list a:hover { box-shadow: 0 0 0 2px var(--accent); color: inherit; }
+  .kicker { font-size: 13px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: .03em; }
+  h2 { margin: 0; font-size: 22px; line-height: 1.25; letter-spacing: -.01em; }
+  p { margin: 0; color: var(--text2); line-height: 1.5; flex: 1; }
+  time { font-size: 14px; color: var(--text3); }
+</style>

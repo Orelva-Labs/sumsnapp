@@ -1,0 +1,27 @@
+---
+// Questions and answers as native <details>: readable without JavaScript and by crawlers.
+import Icon from './Icon.astro';
+
+interface Props { items: [string, string][]; openFirst?: boolean; level?: 'h2' | 'h3' }
+const { items, openFirst = false, level = 'h3' } = Astro.props;
+const H = level;
+---
+<div class="qs">
+  {items.map(([q, a], i) => (
+    <details open={openFirst && i === 0}>
+      <summary><H>{q}</H><Icon name="add" size={24} /></summary>
+      <p>{a}</p>
+    </details>
+  ))}
+</div>
+
+<style>
+  .qs { border-top: .5px solid var(--sep2); }
+  details { border-bottom: .5px solid var(--sep2); }
+  summary { min-height: 60px; padding: 14px 0; display: flex; align-items: center; justify-content: space-between; gap: 16px; cursor: pointer; list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+  summary :is(h2, h3) { margin: 0; font-size: 18px; font-weight: 600; }
+  summary .icon { color: var(--accent); transition: transform .25s; }
+  details[open] summary .icon { transform: rotate(45deg); }
+  details p { margin: 0; padding: 0 40px 20px 0; font-size: 17px; line-height: 1.55; color: var(--text2); text-wrap: pretty; }
+</style>
