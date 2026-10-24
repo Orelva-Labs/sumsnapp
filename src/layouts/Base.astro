@@ -11,8 +11,10 @@ interface Props {
   /** Path after the language, e.g. "" for home or "privacy-policy/". */
   path?: string;
   jsonLd?: object[];
+  /** Keep the page out of search results (e.g. a legal page still missing details). */
+  noindex?: boolean;
 }
-const { lang, title, description, path = '', jsonLd = [] } = Astro.props;
+const { lang, title, description, path = '', jsonLd = [], noindex = false } = Astro.props;
 const url = (l: string) => new URL(`/${l}/${path}`, site.url).href;
 const appId = site.appStoreUrl.match(/id(\d+)/)?.[1];
 ---
@@ -24,6 +26,7 @@ const appId = site.appStoreUrl.match(/id(\d+)/)?.[1];
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={url(lang)} />
+    {noindex && <meta name="robots" content="noindex" />}
     {locales.map((l) => <link rel="alternate" hreflang={l} href={url(l)} />)}
     <link rel="alternate" hreflang="x-default" href={url('en')} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

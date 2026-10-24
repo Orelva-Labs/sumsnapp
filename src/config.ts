@@ -13,6 +13,29 @@ export const site = {
   free: { scans: 10, questions: 3, months: 3 },
 };
 
+/**
+ * The publisher, for the Impressum, Privacy Policy and Terms. Orelva Labs is an Einzelunternehmen,
+ * so the owner's full name and a postal address (no PO box) must be shown.
+ */
+export const legal = {
+  business: 'Orelva Labs',
+  owner: 'Eugene Asiedu',
+  /** TODO: add the house number; the Impressum needs a complete postal address. */
+  street: 'Hermann-Ehlers-Straße',
+  postcode: '26386',
+  city: 'Wilhelmshaven',
+  country: 'Germany',
+  phone: '+49 178 5629752',
+  email: 'hello@sumsnapp.com',
+  /** The data protection authority of the federal state the business is registered in. */
+  authority: { name: 'Die Landesbeauftragte für den Datenschutz Niedersachsen', url: 'https://www.lfd.niedersachsen.de' },
+  /** Date the legal texts were last changed (YYYY-MM-DD). */
+  updated: '2026-10-24',
+};
+
+/** True until every detail the Impressum needs is filled in; the legal pages then stay out of search. */
+export const legalIncomplete = () => !legal.owner || !legal.street || !legal.postcode || !legal.city || !legal.phone;
+
 export const launched = () => site.appStoreUrl !== '';
 
 /** Languages with a translated home page. Others are added when a native-reviewed translation exists. */

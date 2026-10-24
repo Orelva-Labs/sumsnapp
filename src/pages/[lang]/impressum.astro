@@ -1,0 +1,52 @@
+---
+// Required for German websites (§ 5 DDG). German first, as the legal version; English follows for convenience.
+import Legal from '../../layouts/Legal.astro';
+import Field from '../../components/Field.astro';
+import { legal, locales } from '../../config';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+const { lang } = Astro.params as { lang: string };
+
+const toc: [string, string][] = [
+  ['angaben', 'Angaben gemäß § 5 DDG'],
+  ['kontakt', 'Kontakt'],
+  ['verantwortlich', 'Verantwortlich für den Inhalt'],
+  ['streit', 'Verbraucherstreitbeilegung'],
+  ['english', 'English'],
+];
+const country = { Germany: 'Deutschland' }[legal.country] ?? legal.country;
+---
+<Legal lang={lang} path="impressum/" title="Impressum" toc={toc} contentLang="de"
+  description="Impressum der Sumsnapp-Website und -App: Anbieter, Kontakt und Verantwortlicher (Legal notice).">
+
+  <h2 id="angaben">Angaben gemäß § 5 DDG</h2>
+  <address>
+    <strong>{legal.business}</strong><br />
+    Inhaber: <Field value={legal.owner} label="Vor- und Nachname" /><br />
+    <Field value={legal.street} label="Straße und Hausnummer" /><br />
+    <Field value={legal.postcode} label="PLZ" /> <Field value={legal.city} label="Ort" /><br />
+    {country}
+  </address>
+
+  <h2 id="kontakt">Kontakt</h2>
+  <p>
+    Telefon: <Field value={legal.phone} label="Telefonnummer" /><br />
+    E-Mail: <a href={`mailto:${legal.email}`}>{legal.email}</a>
+  </p>
+
+  <h2 id="verantwortlich">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+  <address>
+    <Field value={legal.owner} label="Vor- und Nachname" /><br />
+    <Field value={legal.street} label="Straße und Hausnummer" />, <Field value={legal.postcode} label="PLZ" /> <Field value={legal.city} label="Ort" />
+  </address>
+
+  <h2 id="streit">Verbraucherstreitbeilegung</h2>
+  <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+
+  <h2 id="english" lang="en">English</h2>
+  <div lang="en">
+    <p><strong>Legal notice.</strong> Sumsnapp (the app and this website) is published by {legal.business}, a sole proprietorship owned by <Field value={legal.owner} label="owner's full name" />, at the address above. Contact: <a href={`mailto:${legal.email}`}>{legal.email}</a>, phone <Field value={legal.phone} label="phone number" />. The owner is responsible for the content. We are not willing or obliged to take part in dispute resolution proceedings before a consumer arbitration board.</p>
+  </div>
+</Legal>

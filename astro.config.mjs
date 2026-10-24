@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 
 import sitemap from '@astrojs/sitemap';
+import { legalIncomplete } from './src/config.ts';
 
 // Languages with pages; keep in sync with `locales` in src/config.ts.
 const locales = ['en'];
@@ -21,7 +22,10 @@ export default defineConfig({
   integrations: [
     sitemap({
       // "/" only redirects to /en/, so it stays out of the sitemap.
-      filter: (page) => page !== 'https://www.sumsnapp.com/',
+      // Legal pages stay out while their publisher details are missing (they're noindex then too).
+      filter: (page) =>
+        page !== 'https://www.sumsnapp.com/' &&
+        !(legalIncomplete() && /\/(privacy-policy|terms|impressum)\/$/.test(page)),
       i18n: { defaultLocale: 'en', locales: Object.fromEntries(locales.map((l) => [l, l])) },
     }),
   ],

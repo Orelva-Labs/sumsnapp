@@ -7,8 +7,8 @@ interface Props { lang: string }
 const { lang } = Astro.props;
 const p = (slug: string) => `/${lang}/${slug}/`;
 const cols: [string, [string, string][]][] = [
-  ['Product', [['#how', 'How it works'], ['#privacy', 'Privacy'], ['#pricing', 'Pricing'], [p('guides'), 'Guides']]],
-  ['Help', [['#faq', 'FAQ and support'], [p('press'), 'Press kit'], [p('accessibility'), 'Accessibility']]],
+  ['Product', [[`/${lang}/#how`, 'How it works'], [`/${lang}/#privacy`, 'Privacy'], [`/${lang}/#pricing`, 'Pricing'], [p('guides'), 'Guides']]],
+  ['Help', [[`/${lang}/#faq`, 'FAQ and support'], [p('press'), 'Press kit'], [p('accessibility'), 'Accessibility']]],
   ['Legal', [[p('privacy-policy'), 'Privacy Policy'], [p('terms'), 'Terms of Use'], [p('impressum'), 'Impressum']]],
 ];
 const year = new Date().getFullYear();

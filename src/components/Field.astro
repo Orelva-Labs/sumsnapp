@@ -1,0 +1,6 @@
+---
+// A publisher detail from config: the value, or a highlighted placeholder while it's missing.
+interface Props { value: string; label: string }
+const { value, label } = Astro.props;
+---
+{value ? value : <span class="missing">[{label}]</span>}

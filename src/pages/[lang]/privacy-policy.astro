@@ -1,0 +1,80 @@
+---
+import Legal from '../../layouts/Legal.astro';
+import Field from '../../components/Field.astro';
+import { legal, locales } from '../../config';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+const { lang } = Astro.params as { lang: string };
+
+const toc: [string, string][] = [
+  ['summary', 'Summary'],
+  ['controller', 'Who is responsible'],
+  ['app', 'The Sumsnapp app'],
+  ['website', 'This website'],
+  ['contact', 'When you contact us'],
+  ['rights', 'Your rights'],
+  ['changes', 'Changes to this policy'],
+];
+---
+<Legal lang={lang} path="privacy-policy/" title="Privacy Policy" toc={toc}
+  description="How Sumsnapp handles your data: receipts are read and stored on your iPhone and never uploaded. No account, no tracking, no cookies.">
+
+  <h2 id="summary">Summary</h2>
+  <div class="box">
+    <p><strong>Sumsnapp does not collect your personal data.</strong> The app reads your receipts on your iPhone and keeps them there. Receipt photos, items and spending are never uploaded. There are no Sumsnapp accounts, no ads, no analytics and no tracking, in the app or on this website. This website sets no cookies.</p>
+  </div>
+
+  <h2 id="controller">Who is responsible</h2>
+  <p>The controller under the EU General Data Protection Regulation (GDPR) is:</p>
+  <address>
+    {legal.business}, owner <Field value={legal.owner} label="owner's full name" /><br />
+    <Field value={legal.street} label="street and number" /><br />
+    <Field value={legal.postcode} label="postcode" /> <Field value={legal.city} label="city" />, {legal.country}<br />
+    Email: <a href={`mailto:${legal.email}`}>{legal.email}</a><br />
+    Phone: <Field value={legal.phone} label="phone number" />
+  </address>
+  <p>We are not required to appoint a data protection officer.</p>
+
+  <h2 id="app">The Sumsnapp app</h2>
+  <h3>Receipts stay on your iPhone</h3>
+  <p>When you scan or upload a receipt, Sumsnapp reads it on your iPhone using Apple's on-device text recognition and, where available, Apple Intelligence running on the device. The receipt photos, the items, the amounts and everything you see in Insights are stored only in the app on your iPhone. We have no servers that receive or store them, and we cannot see them.</p>
+  <p>Because these data never reach us, we do not process them as a controller. They are part of your iPhone's own backups (for example an iCloud backup), which are handled by Apple under Apple's terms and your settings. Deleting the app deletes its data from your iPhone.</p>
+
+  <h3>When the app goes online</h3>
+  <p>The app only connects to the internet in these three cases:</p>
+  <ul>
+    <li><strong>Exchange rates.</strong> For a receipt in a different currency from yours, the app asks <a href="https://frankfurter.dev" rel="noopener">frankfurter.dev</a> for that day's exchange rate (European Central Bank data). The request contains only the two currency codes and the date. As with any request on the internet, that server sees your IP address. The legal basis is our legitimate interest in showing your spending in one currency (Art. 6(1)(f) GDPR). If no receipt needs converting, no request is made.</li>
+    <li><strong>Purchases.</strong> Sumsnapp Pro is bought and managed through Apple's App Store. Apple processes the payment and your Apple Account as an independent controller; we only receive a confirmation that your subscription is active, not your name, email or payment details. See <a href="https://www.apple.com/legal/privacy/" rel="noopener">Apple's Privacy Policy</a>.</li>
+    <li><strong>Translation languages.</strong> To find items across languages (for example "milk" and "Vollmilch"), the app uses Apple's on-device translation. The first time a language is needed, iOS may download it from Apple. Item names are translated on your iPhone and are not sent to us.</li>
+  </ul>
+
+  <h3>Camera, photos and Face ID</h3>
+  <p>The app asks for camera access to scan receipts, and you can pick photos or files yourself to upload. These stay on your iPhone. If you turn on app lock, Face ID or your passcode is checked by iOS; Sumsnapp only learns whether it succeeded and never receives biometric data.</p>
+
+  <h3>Exports</h3>
+  <p>A CSV export leaves your iPhone only when you share it yourself, for example by email or to Files. What happens to it then depends on where you send it.</p>
+
+  <h3>No tracking</h3>
+  <p>The app contains no advertising, analytics or tracking code and no third-party SDKs that collect data. Its App Store privacy label is "Data Not Collected". Sumsnapp is not directed at children under 16.</p>
+
+  <h2 id="website">This website</h2>
+  <h3>Hosting and server logs</h3>
+  <p>This website is hosted by Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA. When you visit a page, your browser sends technical information that the hosting servers record briefly in log files: your IP address, the date and time, the page requested, the referring page, and your browser and operating system. This is needed to deliver the site and keep it secure (Art. 6(1)(f) GDPR). We do not combine these logs with other data or use them to identify visitors.</p>
+  <p>Vercel processes these data on our behalf under a data processing agreement (Art. 28 GDPR). Vercel may process data in the USA; such transfers rely on the EU–U.S. Data Privacy Framework or, where it does not apply, the EU Standard Contractual Clauses. See <a href="https://vercel.com/legal/privacy-policy" rel="noopener">Vercel's Privacy Policy</a>.</p>
+
+  <h3>No cookies, no tracking</h3>
+  <p>This website sets no cookies and uses no analytics, advertising or tracking tools. It loads no fonts, scripts or other content from third parties. If you change the colour theme, your choice is saved in your browser's local storage on your device only and is never sent to us; you can clear it in your browser settings.</p>
+
+  <h2 id="contact">When you contact us</h2>
+  <p>If you email or call us, we use your message and contact details only to answer you (Art. 6(1)(b) or (f) GDPR) and delete them when they are no longer needed, unless we are legally required to keep them.</p>
+
+  <h2 id="rights">Your rights</h2>
+  <p>Under the GDPR you have the right to access the personal data we hold about you (Art. 15), to have it corrected (Art. 16) or deleted (Art. 17), to restrict its processing (Art. 18), to receive it in a portable format (Art. 20), and to object to processing based on our legitimate interests (Art. 21). To use these rights, contact us at <a href={`mailto:${legal.email}`}>{legal.email}</a>.</p>
+  <p>You also have the right to complain to a data protection supervisory authority, in particular in the EU country where you live or work. Our responsible authority is {legal.authority.name ? (legal.authority.url ? <a href={legal.authority.url} rel="noopener">{legal.authority.name}</a> : legal.authority.name) : <Field value="" label="state data protection authority" />}.</p>
+  <p>We do not use automated decision-making or profiling.</p>
+
+  <h2 id="changes">Changes to this policy</h2>
+  <p>We update this policy when the app or website changes in a way that affects your data. The date at the top shows the latest version.</p>
+</Legal>

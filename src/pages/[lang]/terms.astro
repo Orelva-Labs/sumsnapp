@@ -1,0 +1,77 @@
+---
+import Legal from '../../layouts/Legal.astro';
+import Field from '../../components/Field.astro';
+import { legal, site, locales } from '../../config';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+const { lang } = Astro.params as { lang: string };
+
+const toc: [string, string][] = [
+  ['agreement', 'This agreement'],
+  ['app', 'The app and its licence'],
+  ['plans', 'Free and Pro'],
+  ['subscriptions', 'Subscriptions and billing'],
+  ['use', 'Using Sumsnapp'],
+  ['accuracy', 'No financial advice'],
+  ['liability', 'Liability'],
+  ['apple', 'Apple'],
+  ['law', 'Law and disputes'],
+  ['changes', 'Changes and contact'],
+];
+---
+<Legal lang={lang} path="terms/" title="Terms of Use" toc={toc}
+  description="The terms for using the Sumsnapp iPhone app and Sumsnapp Pro subscriptions: licence, billing, cancellation and liability.">
+
+  <h2 id="agreement">This agreement</h2>
+  <p>These Terms of Use are an agreement between you and {legal.business}, owner <Field value={legal.owner} label="owner's full name" /> ("we", "us"), the publisher of the Sumsnapp app for iPhone. They are also the app's end-user licence agreement in the App Store. By downloading or using Sumsnapp, you agree to them. Our <a href={`/${lang}/privacy-policy/`}>Privacy Policy</a> explains how data is handled.</p>
+
+  <h2 id="app">The app and its licence</h2>
+  <p>We grant you a personal, non-exclusive, non-transferable licence to use Sumsnapp on Apple devices that you own or control, as permitted by the App Store's Usage Rules, including Family Sharing. You may not copy, modify, reverse-engineer, resell or redistribute the app, except where the law allows this regardless of these terms. All rights not expressly granted remain with us.</p>
+  <p>Sumsnapp reads receipts and stores the results on your iPhone. You are responsible for your device and its backups; we cannot recover data we never receive.</p>
+
+  <h2 id="plans">Free and Pro</h2>
+  <p>Sumsnapp is free to use with limits: {site.free.scans} receipt scans and {site.free.questions} questions a month, and insights for the last {site.free.months} months. Sumsnapp Pro removes these limits and adds features such as price alerts and price history, CSV export and app lock. We describe the current features and limits on the website and in the app. We may improve or change features over time; we will not take away features you have paid for during a running subscription period.</p>
+
+  <h2 id="subscriptions">Subscriptions and billing</h2>
+  <ul>
+    <li>Sumsnapp Pro is an auto-renewing subscription, monthly or yearly, sold and billed by Apple through your Apple Account. Prices are shown in the app before you buy and may vary by country.</li>
+    <li>The yearly plan may include a free trial. If you do not cancel at least 24 hours before the trial ends, the subscription starts and you are charged.</li>
+    <li>Subscriptions renew automatically for the same period unless you turn off auto-renewal at least 24 hours before the end of the current period. Manage or cancel it in Settings → your name → Subscriptions on your iPhone.</li>
+    <li>Cancelling stops the next renewal; Pro stays active until the end of the period you have paid for.</li>
+    <li>Refunds are handled by Apple under its policies; request one at <a href="https://reportaproblem.apple.com" rel="noopener">reportaproblem.apple.com</a>. Any statutory right of withdrawal you have as a consumer in the EU is exercised through Apple, which sells the subscription.</li>
+    <li>If we change the price of a subscription, Apple informs you in advance and, where required, asks for your consent before you are charged the new price.</li>
+  </ul>
+
+  <h2 id="use">Using Sumsnapp</h2>
+  <p>Use Sumsnapp only for lawful purposes and only for receipts and documents you are entitled to use. Do not try to circumvent the free limits or subscription checks, or interfere with the app's operation.</p>
+
+  <h2 id="accuracy">No financial advice</h2>
+  <p>Sumsnapp turns receipts into numbers automatically. Text recognition and categorisation can make mistakes, exchange rates are reference rates, and price comparisons are based only on your own receipts. Results are estimates to help you understand your spending. They are not financial, tax or legal advice, and they are not a substitute for your own records where accuracy matters, for example for taxes or expense claims. Check the receipt itself when it counts.</p>
+
+  <h2 id="liability">Liability</h2>
+  <p>We are liable without limitation for damage caused intentionally or through gross negligence, for injury to life, body or health, under the German Product Liability Act, and where we have given a guarantee.</p>
+  <p>For slight negligence, we are liable only if we breach an essential obligation (one whose fulfilment makes the proper use of the app possible and on which you may regularly rely), and only for the typical damage foreseeable when you started using the app. Otherwise, we are not liable for slight negligence. These limits also apply in favour of the people we work with.</p>
+
+  <h2 id="apple">Apple</h2>
+  <p>These terms are between you and us, not Apple. In addition:</p>
+  <ul>
+    <li>We, not Apple, are solely responsible for Sumsnapp and its content, and for providing maintenance and support. Apple has no obligation to provide maintenance or support for the app.</li>
+    <li>If Sumsnapp does not conform to any applicable warranty, you may notify Apple, and Apple will refund the purchase price, if any. To the maximum extent permitted by law, Apple has no other warranty obligation for the app. Any other claims, losses or costs from a failure to conform to a warranty are our responsibility, to the extent the law and these terms provide.</li>
+    <li>We, not Apple, are responsible for handling any claims relating to Sumsnapp or your use of it, including product liability claims, claims that the app fails to meet legal or regulatory requirements, and claims under consumer protection, privacy or similar laws.</li>
+    <li>If a third party claims that Sumsnapp or your use of it infringes their intellectual property rights, we, not Apple, are responsible for investigating, defending, settling and discharging that claim.</li>
+    <li>You confirm that you are not located in a country subject to a U.S. Government embargo or designated as "terrorist supporting", and that you are not listed on any U.S. Government list of prohibited or restricted parties.</li>
+    <li>You must comply with any applicable third-party terms when using Sumsnapp.</li>
+    <li>Apple and its subsidiaries are third-party beneficiaries of these terms and may enforce them against you.</li>
+  </ul>
+
+  <h2 id="law">Law and disputes</h2>
+  <p>German law applies, excluding the UN Convention on Contracts for the International Sale of Goods. If you are a consumer, this choice of law does not take away the protection of the mandatory laws of the country where you live.</p>
+  <p>We are not obliged and not willing to take part in dispute resolution proceedings before a consumer arbitration board.</p>
+  <p>If any provision of these terms is invalid, the rest remain in effect.</p>
+
+  <h2 id="changes">Changes and contact</h2>
+  <p>We may update these terms, for example when we add features or the law changes. We will tell you about material changes in the app or on this website before they take effect. The date at the top shows the latest version.</p>
+  <p>Questions, support or complaints: <a href={`mailto:${legal.email}`}>{legal.email}</a> or by post to the address in our <a href={`/${lang}/impressum/`}>Impressum</a>.</p>
+</Legal>

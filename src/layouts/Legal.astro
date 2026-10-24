@@ -1,0 +1,65 @@
+---
+// Long-form legal page: title, last-updated date, table of contents and readable text.
+import Base from './Base.astro';
+import { legal, legalIncomplete } from '../config';
+
+interface Props {
+  lang: string;
+  title: string;
+  description: string;
+  path: string;
+  /** Section headings as [id, label], for the table of contents. */
+  toc: [string, string][];
+  /** Page language when it differs from the URL's (the Impressum is German). */
+  contentLang?: string;
+}
+const { lang, title, description, path, toc, contentLang } = Astro.props;
+const draft = legalIncomplete();
+const updated = new Date(legal.updated + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<Base lang={lang} title={`${title} · Sumsnapp`} description={description} path={path} noindex={draft}>
+  <main id="top" class="wrap legal" lang={contentLang}>
+    {draft && (
+      <p class="draft" role="note">Draft: the publisher's name, address and phone number are still missing. This page stays out of search results until they're added.</p>
+    )}
+    <header class="head">
+      <h1>{title}</h1>
+      <p class="updated">Last updated {updated}</p>
+    </header>
+    <div class="layout">
+      <nav class="toc" aria-label="On this page">
+        <span>On this page</span>
+        <ol>{toc.map(([id, label]) => <li><a href={`#${id}`}>{label}</a></li>)}</ol>
+      </nav>
+      <article class="prose"><slot /></article>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .legal { padding-top: clamp(32px, 5vw, 64px); padding-bottom: var(--section); }
+  .draft { margin: 0 0 24px; padding: 12px 16px; border-radius: 12px; background: light-dark(#FDF0DC, #3A2A0F); color: light-dark(#6B3A00, #FFD08A); font-size: 15px; }
+  .head h1 { margin: 0; font-size: clamp(34px, 5vw, 56px); font-weight: 700; letter-spacing: -.02em; line-height: 1.05; }
+  .updated { margin: 10px 0 0; color: var(--text3); font-size: 15px; }
+  .layout { display: grid; grid-template-columns: 240px minmax(0, 720px); gap: clamp(32px, 5vw, 72px); margin-top: 40px; align-items: start; }
+  .toc { position: sticky; top: 88px; font-size: 14px; }
+  .toc span { display: block; font-weight: 600; color: var(--text3); margin-bottom: 8px; }
+  .toc ol { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 2px; }
+  .toc a { color: var(--text2); text-decoration: none; min-height: 32px; display: flex; align-items: center; }
+  .toc a:hover { color: var(--accent); }
+  @media (max-width: 899px) {
+    .layout { grid-template-columns: minmax(0, 1fr); }
+    .toc { position: static; padding: 16px; border-radius: 16px; background: var(--card); }
+  }
+  .prose { font-size: 17px; line-height: 1.6; }
+  .prose :global(h2) { font-size: 24px; letter-spacing: -.01em; line-height: 1.25; margin: 40px 0 12px; scroll-margin-top: 88px; }
+  .prose :global(h2:first-child) { margin-top: 0; }
+  .prose :global(h3) { font-size: 19px; margin: 28px 0 8px; }
+  .prose :global(p), .prose :global(ul), .prose :global(ol), .prose :global(address) { margin: 0 0 14px; color: var(--text2); }
+  .prose :global(address) { font-style: normal; }
+  .prose :global(li) { margin-bottom: 6px; }
+  .prose :global(strong) { color: var(--fg); }
+  .prose :global(.missing) { padding: 0 6px; border-radius: 6px; background: light-dark(#FDF0DC, #3A2A0F); color: light-dark(#6B3A00, #FFD08A); }
+  .prose :global(.box) { padding: 16px 18px; border-radius: 16px; background: var(--card); margin: 0 0 18px; }
+  .prose :global(.box p:last-child) { margin-bottom: 0; }
+</style>
